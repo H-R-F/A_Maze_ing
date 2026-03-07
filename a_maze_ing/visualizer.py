@@ -5,6 +5,12 @@ WALL_COLOR = "\033[37m"  #  WHITE COLOR
 PATH_COLOR = "\033[32m"  #* GREEN COLOR
 ENTRY_COLOR = "\033[34m" #? BLUE COLOR
 EXIT_COLOR = "\033[31m"  #! RED COLOR
+PATTERN_COLOR = "\033[37;2m"  # DIM WHITE for 42 pattern
+
+
+def clear_screen() -> None:
+    """Clear terminal screen."""
+    print("\033[2J\033[H", end="")
 
 def display_maze(
         grid: list[list[int]],
@@ -13,7 +19,9 @@ def display_maze(
         entry: tuple[int, int],
         exit_pos: tuple[int, int],
         path: str | None = None,
-        wall_color: str = WALL_COLOR
+        wall_color: str = WALL_COLOR,
+        pattern_cells: set[tuple[int, int]] | None = None,
+        pattern_color: str = PATTERN_COLOR,
     ) -> None:
     """Display maze in terminal using box-drawing characters."""
 
@@ -56,6 +64,8 @@ def display_maze(
                 mid += EXIT_COLOR + " E " + wall_color
             elif (x, y) in path_cells:
                 mid += PATH_COLOR + " . " + wall_color
+            elif pattern_cells and (x, y) in pattern_cells:
+                mid += pattern_color + " ▓ " + wall_color
             else:
                 mid += "   "
 
