@@ -1,0 +1,9 @@
+# =============================================================================
+# requirements.txt — Had lfile fih l'packages li khassek tinstalliha
+# =============================================================================
+
+flake8
+mypy
+build
+setuptools
+pytest

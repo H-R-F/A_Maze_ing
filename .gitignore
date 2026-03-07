@@ -1,0 +1,26 @@
+# Tjahal l'bytecode dyal Python:
+__pycache__/
+*.pyc
+*.pyo
+
+# Tjahal l'virtual environment:
+venv/
+.venv/
+
+# Tjahal l'caches dyal mypy w pytest:
+.mypy_cache/
+.pytest_cache/
+
+# Tjahal l'build artifacts (hadchi li kaytsawb ml build):
+build/
+dist/
+*.egg-info/
+
+# Tjahal l'fichier li kaytsawb mn l'programme (maze.txt):
+output/maze.txt
+
+# Tjahal l'dossiers dyal l'IDE:
+.vscode/
+
+# Tjahal l'dossier dyal notes chakhssiya (machi mn l'projet):
+for_me/

@@ -1,0 +1,36 @@
+# =============================================================================
+# pyproject.toml — Had lfile kaygoul l Python kifach ybni l'package mazegen
+# =============================================================================
+#
+# Chno khassek tdir fih:
+#
+#   Khtwa 1: Zid section [build-system]:
+#            [build-system]
+#            requires = ["setuptools>=68.0", "wheel"]
+#            build-backend = "setuptools.build_meta"
+#
+#   Khtwa 2: Zid section [project] b l'infos dyal l'package:
+#            [project]
+#            name = "mazegen"
+#            version = "1.0.0"
+#            description = "A reusable maze generator module"
+#            requires-python = ">=3.10"
+#            # Zid authors w license ila bghiti
+#
+#   Khtwa 3: Zid dependencies dyal l'dev (IKHTIYARI):
+#            [project.optional-dependencies]
+#            dev = ["flake8", "mypy", "pytest"]
+#
+#   Khtwa 4: Goul l setuptools ASH ydkhel f l'package:
+#            [tool.setuptools.packages.find]
+#            include = ["mazegen*"]
+#            # MOHIM: ghir mazegen/ li ghaydkhel f l'.whl
+#            # a_maze_ing/ w tests/ MA GHAYDKHLOU CH!
+#
+#   Khtwa 5: Bach tbni l'package, dir:
+#            python3 -m build
+#            Had chi ghay3tik:
+#              dist/mazegen-1.0.0-py3-none-any.whl
+#              dist/mazegen-1.0.0.tar.gz
+#            Mn b3d KOPPI l'.whl l root dyal l'projet.
+# =============================================================================
