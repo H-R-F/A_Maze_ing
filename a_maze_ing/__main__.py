@@ -17,11 +17,6 @@ def build_parser() -> argparse.ArgumentParser:
         description="Generate, display, and play a maze in the console.",
     )
     parser.add_argument("config", help="Path to config file")
-    parser.add_argument(
-        "-p", "--inject-42",
-        action="store_true",
-        help="Inject the 42 pattern into the generated maze",
-    )
     return parser
 
 
@@ -48,18 +43,17 @@ def main() -> None:
     perfect = cfg.perfect
     seed = getattr(cfg, "seed", None)
 
-    # ── generate maze ────────────────────────────────────────────────────
+    # ── inject 42 pattern on fresh grid ────────────────────────────────
     generator = MazeGenerator(
         width=width, height=height, perfect=perfect, seed=seed
     )
-    generator.generate()
-    grid = generator.get_grid()
+    pattern_cells = inject_42_pattern(
+        generator.grid, width, height
+    )
 
-    # ── inject 42 pattern (optional) ─────────────────────────────────────
-    pattern_cells: set[tuple[int, int]] = set()
-    if args.inject_42:
-        result = inject_42_pattern(grid, width, height)
-        pattern_cells = result if isinstance(result, set) else set()
+    # ── generate maze around the pattern ─────────────────────────────
+    generator.generate(blocked=pattern_cells)
+    grid = generator.get_grid()
 
     # ── run interactive menu ─────────────────────────────────────────────
     grid, pattern_cells, path = run_interactive(
@@ -70,7 +64,7 @@ def main() -> None:
         exit_pos=exit_pos,
         perfect=perfect,
         seed=seed,
-        pattern_enabled=args.inject_42,
+        pattern_enabled=True,
         pattern_cells=pattern_cells,
     )
 

@@ -70,14 +70,25 @@ class MazeGenerator:
         ny = y + DIRECTION[wall][1]
         self.grid[ny][nx] &= ~OPPOSITE[wall]
     
-    def generate(self) -> None:
-        """Generate the maze using Recursive Backtracker (DFS)."""
+    def generate(
+        self,
+        blocked: set[tuple[int, int]] | None = None,
+    ) -> None:
+        """Generate the maze using Recursive Backtracker (DFS).
+
+        Args:
+            blocked: cells to skip (e.g. 42 pattern cells).
+        """
+        if blocked is None:
+            blocked = set()
+
         self.grid = [
             [ALL_WALLS for _ in range(self.width)]
             for _ in range(self.height)
         ]
 
         visited: set[tuple[int, int]] = set()
+        visited.update(blocked)
         start = (0, 0)
         visited.add(start)
         stack: list[tuple[int, int]] = [start]
@@ -98,6 +109,20 @@ class MazeGenerator:
                 stack.append((nx, ny))
             else:
                 stack.pop()
+
+        if not self.perfect:
+            extra = (self.width * self.height) // 10
+            for _ in range(extra):
+                x = random.randint(0, self.width - 1)
+                y = random.randint(0, self.height - 1)
+                if (x, y) in blocked:
+                    continue
+                wall = random.choice([NORTH, EAST, SOUTH, WEST])
+                nx = x + DIRECTION[wall][0]
+                ny = y + DIRECTION[wall][1]
+                if self._is_valid(nx, ny) and (nx, ny) not in blocked:
+                    if self._has_wall(x, y, wall):
+                        self._remove_wall(x, y, wall)
     
     def get_grid(self) -> list[list[int]]:
         """Return a copy of the maze grid"""

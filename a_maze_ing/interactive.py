@@ -92,14 +92,16 @@ def run_interactive(
             gen = MazeGenerator(
                 width=width, height=height, perfect=perfect, seed=None
             )
-            gen.generate()
-            grid = gen.get_grid()
 
             if pattern_enabled:
-                result = inject_42_pattern(grid, width, height)
-                pattern_cells = result if isinstance(result, set) else set()
+                pattern_cells = inject_42_pattern(
+                    gen.grid, width, height
+                )
             else:
                 pattern_cells = set()
+
+            gen.generate(blocked=pattern_cells)
+            grid = gen.get_grid()
 
             path = solve_maze(grid, width, height, entry, exit_pos)
             show_path = False
