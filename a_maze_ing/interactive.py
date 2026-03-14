@@ -23,10 +23,10 @@ WALL_COLORS = [
 
 # -- 42 pattern colour options ------------------------------------------------
 PATTERN_COLORS = [
-    ("\033[37;2m", "Dim white"),
-    ("\033[93;2m", "Dim yellow"),
-    ("\033[92;2m", "Dim green"),
-    ("\033[96;2m", "Dim cyan"),
+    ("\033[37m", "White"),
+    ("\033[93m", "Yellow"),
+    ("\033[92m", "Green"),
+    ("\033[96m", "Cyan"),
 ]
 
 
