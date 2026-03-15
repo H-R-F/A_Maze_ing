@@ -21,7 +21,7 @@ def export_maze(
             for cell in row:
                 line += format(cell, "X")
             f.write(line + "\n")
-        
+
         f.write("\n")
         f.write(f"{entry[0]},{entry[1]}\n")
         f.write(f"{exit_pos[0]},{exit_pos[1]}\n")

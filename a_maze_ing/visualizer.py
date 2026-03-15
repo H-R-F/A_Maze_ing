@@ -1,10 +1,10 @@
 from mazegen.generator import NORTH, EAST, SOUTH, WEST
 
 RESET = "\033[0m"
-WALL_COLOR = "\033[37m"  #  WHITE COLOR
-PATH_COLOR = "\033[32m"  #* GREEN COLOR
-ENTRY_COLOR = "\033[34m" #? BLUE COLOR
-EXIT_COLOR = "\033[31m"  #! RED COLOR
+WALL_COLOR = "\033[37m"  # WHITE COLOR
+PATH_COLOR = "\033[32m"  # GREEN COLOR
+ENTRY_COLOR = "\033[34m"  # BLUE COLOR
+EXIT_COLOR = "\033[31m"  # RED COLOR
 PATTERN_COLOR = "\033[37;2m"  # DIM WHITE for 42 pattern
 
 CROSS = {
@@ -45,7 +45,7 @@ def display_maze(
         path_color: str = PATH_COLOR,
         pattern_cells: set[tuple[int, int]] | None = None,
         pattern_color: str = PATTERN_COLOR,
-    ) -> None:
+) -> None:
     """Display maze in terminal using box-drawing characters."""
 
     path_cells: set[tuple[int, int]] = set()
@@ -113,5 +113,3 @@ def display_maze(
             mid += V_WALL if v_wall(width, hy) else " "
             mid += RESET
             print(mid)
-            
-

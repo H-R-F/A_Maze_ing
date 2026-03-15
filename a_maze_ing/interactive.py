@@ -71,7 +71,8 @@ def run_interactive(
 
         wall_color = WALL_COLORS[wall_idx][0]
         path_color = PATH_COLORS[path_idx][0]
-        pat_color = PATTERN_COLORS[pat_idx][0] if pattern_cells else PATTERN_COLOR
+        pat_color = (PATTERN_COLORS[pat_idx][0]
+                     if pattern_cells else PATTERN_COLOR)
 
         display_maze(
             grid=grid,
@@ -88,17 +89,17 @@ def run_interactive(
 
         print()
         print("== A-Maze-ing ==")
-        print("1. Re-generate a new maze")
-        print("2. Show/Hide path from entry to exit")
-        print("3. Rotate maze colors")
-        print("4. Rotate path colors")
+        print("R. Re-generate a new maze")
+        print("P. Show/Hide path from entry to exit")
+        print("W. Rotate maze colors")
+        print("J. Rotate path colors")
         if pattern_enabled:
-            print("5. Rotate 42 pattern colors")
-            print("6. Quit")
-            prompt = "Choice? (1-6): "
+            print("M. Rotate 42 pattern colors")
+            print("Q. Quit")
+            prompt = "Choice? (R-P-W-J-M-Q): "
         else:
-            print("5. Quit")
-            prompt = "Choice? (1-5): "
+            print("Q. Quit")
+            prompt = "Choice? (R-P-W-J-Q): "
         print()
 
         try:
@@ -106,7 +107,7 @@ def run_interactive(
         except (EOFError, KeyboardInterrupt):
             break
 
-        if choice == "1":
+        if choice == "R":
             gen = MazeGenerator(
                 width=width, height=height, perfect=perfect, seed=None
             )
@@ -123,19 +124,20 @@ def run_interactive(
 
             path = solve_maze(grid, width, height, entry, exit_pos)
 
-        elif choice == "2":
+        elif choice == "P":
             show_path = not show_path
 
-        elif choice == "3":
+        elif choice == "W":
             wall_idx = (wall_idx + 1) % len(WALL_COLORS)
 
-        elif choice == "4":
+        elif choice == "J":
             path_idx = (path_idx + 1) % len(PATH_COLORS)
 
-        elif choice == "5" and pattern_enabled:
+        elif choice == "M" and pattern_enabled:
             pat_idx = (pat_idx + 1) % len(PATTERN_COLORS)
 
-        elif (choice == "6" and pattern_enabled) or (choice == "5" and not pattern_enabled):
+        elif ((choice == "Q" and pattern_enabled) or
+                (choice == "M" and not pattern_enabled)):
             break
 
         else:

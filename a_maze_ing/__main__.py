@@ -3,11 +3,9 @@ import sys
 
 from a_maze_ing.config_parser import get_config
 from a_maze_ing.interactive import run_interactive
-from a_maze_ing.visualizer import display_maze, clear_screen
 from mazegen.formatter import export_maze
 from mazegen.generator import MazeGenerator
 from mazegen.patterns import inject_42_pattern
-from mazegen.solver import solve_maze
 
 
 def build_parser() -> argparse.ArgumentParser:

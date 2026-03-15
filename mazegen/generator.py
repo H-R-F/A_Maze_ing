@@ -9,7 +9,7 @@ WEST = 8
 ALL_WALLS = NORTH + EAST + SOUTH + WEST
 
 OPPOSITE = {
-    NORTH: SOUTH, 
+    NORTH: SOUTH,
     SOUTH: NORTH,
     EAST: WEST,
     WEST: EAST,
@@ -18,7 +18,7 @@ OPPOSITE = {
 DIRECTION = {
     NORTH: (0, -1),
     SOUTH: (0, 1),
-    EAST: (1 , 0),
+    EAST: (1, 0),
     WEST: (-1, 0)
 }
 
@@ -32,7 +32,7 @@ class MazeGenerator:
         height: int,
         perfect: bool = True,
         seed: Optional[int] = None,
-    )-> None:
+    ) -> None:
 
         """Initialize the maze generator
 
@@ -69,7 +69,7 @@ class MazeGenerator:
         nx = x + DIRECTION[wall][0]
         ny = y + DIRECTION[wall][1]
         self.grid[ny][nx] &= ~OPPOSITE[wall]
-    
+
     def generate(
         self,
         blocked: set[tuple[int, int]] | None = None,
@@ -101,7 +101,7 @@ class MazeGenerator:
                 ny = cy + DIRECTION[wall][1]
                 if self._is_valid(nx, ny) and (nx, ny) not in visited:
                     neighbors.append((wall, nx, ny))
-            
+
             if neighbors:
                 wall, nx, ny = random.choice(neighbors)
                 self._remove_wall(cx, cy, wall)
@@ -123,10 +123,11 @@ class MazeGenerator:
                 if self._is_valid(nx, ny) and (nx, ny) not in blocked:
                     if self._has_wall(x, y, wall):
                         self._remove_wall(x, y, wall)
-    
+
     def get_grid(self) -> list[list[int]]:
         """Return a copy of the maze grid"""
         rows: list[list[int]] = []
         for row in self.grid:
-            rows.append(row[:]) #![:] is mean slice ----([start:stop]----[start:] ---- [:stop] ----- [:])
+            rows.append(row[:])
+# [:] is mean slice ----([start:stop]----[start:] ---- [:stop] ----- [:])
         return rows
