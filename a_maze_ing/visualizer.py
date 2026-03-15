@@ -42,6 +42,7 @@ def display_maze(
         exit_pos: tuple[int, int],
         path: str | None = None,
         wall_color: str = WALL_COLOR,
+        path_color: str = PATH_COLOR,
         pattern_cells: set[tuple[int, int]] | None = None,
         pattern_color: str = PATTERN_COLOR,
     ) -> None:
@@ -106,7 +107,7 @@ def display_maze(
                 elif pattern_cells and (x, hy) in pattern_cells:
                     mid += pattern_color + "███" + wall_color
                 elif (x, hy) in path_cells:
-                    mid += PATH_COLOR + "███" + wall_color
+                    mid += path_color + "███" + wall_color
                 else:
                     mid += "   "
             mid += V_WALL if v_wall(width, hy) else " "

@@ -7,7 +7,8 @@ Subject requirements:
   4. Optional: set specific colours to display the "42" pattern.
 """
 
-from a_maze_ing.visualizer import display_maze, clear_screen, WALL_COLOR, PATTERN_COLOR
+from a_maze_ing.visualizer import display_maze, PATTERN_COLOR
+from a_maze_ing.visualizer import clear_screen
 from mazegen.generator import MazeGenerator
 from mazegen.patterns import inject_42_pattern
 from mazegen.solver import solve_maze
@@ -27,6 +28,15 @@ PATTERN_COLORS = [
     ("\033[93m", "Yellow"),
     ("\033[92m", "Green"),
     ("\033[96m", "Cyan"),
+]
+
+# -- path colour options ------------------------------------------------------
+PATH_COLORS = [
+    ("\033[32m", "Green (default)"),
+    ("\033[96m", "Cyan"),
+    ("\033[95m", "Magenta"),
+    ("\033[93m", "Yellow"),
+    ("\033[91m", "Red"),
 ]
 
 
@@ -49,6 +59,7 @@ def run_interactive(
         pattern_cells = set()
 
     wall_idx = 0
+    path_idx = 0
     pat_idx = 0
     show_path = False
 
@@ -59,6 +70,7 @@ def run_interactive(
         clear_screen()
 
         wall_color = WALL_COLORS[wall_idx][0]
+        path_color = PATH_COLORS[path_idx][0]
         pat_color = PATTERN_COLORS[pat_idx][0] if pattern_cells else PATTERN_COLOR
 
         display_maze(
@@ -69,6 +81,7 @@ def run_interactive(
             exit_pos=exit_pos,
             path=path if show_path else None,
             wall_color=wall_color,
+            path_color=path_color,
             pattern_cells=pattern_cells,
             pattern_color=pat_color,
         )
@@ -78,13 +91,18 @@ def run_interactive(
         print("1. Re-generate a new maze")
         print("2. Show/Hide path from entry to exit")
         print("3. Rotate maze colors")
+        print("4. Rotate path colors")
         if pattern_enabled:
-            print("4. Rotate 42 pattern colors")
-        print("5. Quit")
+            print("5. Rotate 42 pattern colors")
+            print("6. Quit")
+            prompt = "Choice? (1-6): "
+        else:
+            print("5. Quit")
+            prompt = "Choice? (1-5): "
         print()
 
         try:
-            choice = input("Choice? (1-5): ").strip()
+            choice = input(prompt).strip()
         except (EOFError, KeyboardInterrupt):
             break
 
@@ -104,7 +122,6 @@ def run_interactive(
             grid = gen.get_grid()
 
             path = solve_maze(grid, width, height, entry, exit_pos)
-            show_path = False
 
         elif choice == "2":
             show_path = not show_path
@@ -112,10 +129,16 @@ def run_interactive(
         elif choice == "3":
             wall_idx = (wall_idx + 1) % len(WALL_COLORS)
 
-        elif choice == "4" and pattern_enabled:
+        elif choice == "4":
+            path_idx = (path_idx + 1) % len(PATH_COLORS)
+
+        elif choice == "5" and pattern_enabled:
             pat_idx = (pat_idx + 1) % len(PATTERN_COLORS)
 
-        elif choice == "5":
+        elif (choice == "6" and pattern_enabled) or (choice == "5" and not pattern_enabled):
             break
+
+        else:
+            continue
 
     return grid, pattern_cells, path or ""
