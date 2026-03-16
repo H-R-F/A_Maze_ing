@@ -1,12 +1,3 @@
-"""Interactive console menu for A_Maze_ing.
-
-Subject requirements:
-  1. Re-generate a new maze and display it.
-  2. Show/Hide a valid shortest path from entrance to exit.
-  3. Change maze wall colours.
-  4. Optional: set specific colours to display the "42" pattern.
-"""
-
 from a_maze_ing.visualizer import display_maze, PATTERN_COLOR
 from a_maze_ing.visualizer import clear_screen
 from mazegen.generator import MazeGenerator
@@ -103,7 +94,7 @@ def run_interactive(
         print()
 
         try:
-            choice = input(prompt).strip()
+            choice = input(prompt).strip().upper()
         except (EOFError, KeyboardInterrupt):
             break
 
