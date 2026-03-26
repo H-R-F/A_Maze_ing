@@ -30,6 +30,11 @@ PATH_COLORS = [
     ("\033[91m", "Red"),
 ]
 
+# -- entry/exit marker form options ------------------------------------------
+ENTRY_MARKS = [" E ", "[E]", "<E>", "(E)", "███"]
+EXIT_MARKS = [" X ", "[X]", "<X>", "(X)", "███"]
+MARKER_PAIRS = list(zip(ENTRY_MARKS, EXIT_MARKS))
+
 
 def run_interactive(
     grid: list[list[int]],
@@ -52,6 +57,7 @@ def run_interactive(
     wall_idx = 0
     path_idx = 0
     pat_idx = 0
+    pair_idx = 0
     show_path = False
 
     # Solve for initial maze
@@ -64,6 +70,7 @@ def run_interactive(
         path_color = PATH_COLORS[path_idx][0]
         pat_color = (PATTERN_COLORS[pat_idx][0]
                      if pattern_cells else PATTERN_COLOR)
+        entry_mark, exit_mark = MARKER_PAIRS[pair_idx]
 
         display_maze(
             grid=grid,
@@ -76,6 +83,8 @@ def run_interactive(
             path_color=path_color,
             pattern_cells=pattern_cells,
             pattern_color=pat_color,
+            entry_mark=entry_mark,
+            exit_mark=exit_mark,
         )
 
         print()
@@ -84,13 +93,14 @@ def run_interactive(
         print("P. Show/Hide path from entry to exit")
         print("W. Rotate maze colors")
         print("J. Rotate path colors")
+        print("C. Rotate entry+exit forms together")
         if pattern_enabled:
             print("M. Rotate 42 pattern colors")
             print("Q. Quit")
-            prompt = "Choice? (R-P-W-J-M-Q): "
+            prompt = "Choice? (R-P-W-J-C-M-Q): "
         else:
             print("Q. Quit")
-            prompt = "Choice? (R-P-W-J-Q): "
+            prompt = "Choice? (R-P-W-J-C-Q): "
         print()
 
         try:
@@ -124,11 +134,13 @@ def run_interactive(
         elif choice == "J":
             path_idx = (path_idx + 1) % len(PATH_COLORS)
 
+        elif choice == "C":
+            pair_idx = (pair_idx + 1) % len(MARKER_PAIRS)
+
         elif choice == "M" and pattern_enabled:
             pat_idx = (pat_idx + 1) % len(PATTERN_COLORS)
 
-        elif ((choice == "Q" and pattern_enabled) or
-                (choice == "M" and not pattern_enabled)):
+        elif choice == "Q":
             break
 
         else:

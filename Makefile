@@ -75,4 +75,9 @@ lint:
 	$(VENV)/bin/flake8 .
 	$(VENV)/bin/mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
+build:
+	python3 -m build
+	cp ./dist/mazegen-1.0.0-py3-none-any.whl ./
+	rm -rf dist
+
 .PHONY: install run debug clean lint

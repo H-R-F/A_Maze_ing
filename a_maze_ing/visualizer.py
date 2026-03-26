@@ -6,6 +6,8 @@ PATH_COLOR = "\033[32m"  # GREEN COLOR
 ENTRY_COLOR = "\033[34m"  # BLUE COLOR
 EXIT_COLOR = "\033[31m"  # RED COLOR
 PATTERN_COLOR = "\033[37;2m"  # DIM WHITE for 42 pattern
+ENTRY_MARK = " E "
+EXIT_MARK = " X "
 
 CROSS = {
     (0, 0, 0, 0): " ",
@@ -45,6 +47,8 @@ def display_maze(
         path_color: str = PATH_COLOR,
         pattern_cells: set[tuple[int, int]] | None = None,
         pattern_color: str = PATTERN_COLOR,
+        entry_mark: str = ENTRY_MARK,
+        exit_mark: str = EXIT_MARK,
 ) -> None:
     """Display maze in terminal using box-drawing characters."""
 
@@ -101,9 +105,9 @@ def display_maze(
             for x in range(width):
                 mid += V_WALL if v_wall(x, hy) else " "
                 if (x, hy) == entry:
-                    mid += ENTRY_COLOR + "███" + wall_color
+                    mid += ENTRY_COLOR + entry_mark + wall_color
                 elif (x, hy) == exit_pos:
-                    mid += EXIT_COLOR + "███" + wall_color
+                    mid += EXIT_COLOR + exit_mark + wall_color
                 elif pattern_cells and (x, hy) in pattern_cells:
                     mid += pattern_color + "███" + wall_color
                 elif (x, hy) in path_cells:
