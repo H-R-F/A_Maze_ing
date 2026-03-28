@@ -5,9 +5,9 @@ WALL_COLOR = "\033[37m"  # WHITE COLOR
 PATH_COLOR = "\033[32m"  # GREEN COLOR
 ENTRY_COLOR = "\033[34m"  # BLUE COLOR
 EXIT_COLOR = "\033[31m"  # RED COLOR
-PATTERN_COLOR = "\033[37;2m"  # DIM WHITE for 42 pattern
-ENTRY_MARK = " E "
-EXIT_MARK = " X "
+PATTERN_COLOR = "\033[37m"  # DIM WHITE for 42 pattern
+ENTRY_MARK = "E"
+EXIT_MARK = "X"
 
 CROSS = {
     (0, 0, 0, 0): " ",
@@ -52,10 +52,12 @@ def display_maze(
 ) -> None:
     """Display maze in terminal using box-drawing characters."""
 
-    path_cells: set[tuple[int, int]] = set()
+
+    import os
+    path_cells: list[tuple[int, int]] = []
     if path:
         x, y = entry
-        path_cells.add((x, y))
+        path_cells.append((x, y))
         for ch in path:
             if ch == "N":
                 y -= 1
@@ -65,7 +67,56 @@ def display_maze(
                 x += 1
             elif ch == "W":
                 x -= 1
-            path_cells.add((x, y))
+            path_cells.append((x, y))
+
+    path_set = set(path_cells)
+
+    # --- Terminal size check ---
+    try:
+        rows, cols = os.popen('stty size', 'r').read().split()
+        rows, cols = int(rows), int(cols)
+    except Exception:
+        rows, cols = 24, 80  # fallback default
+
+    # Each maze row prints 2 lines (sep+mid), each cell is 3 chars wide
+    needed_rows = (height + 1) + height
+    needed_cols = (width + 1) * 4  # approx, for walls and padding
+    if needed_rows > rows or needed_cols > cols:
+        print(f"\033[31m[!] Terminal too small for maze: needs {needed_cols}x{needed_rows}, you have {cols}x{rows}.\033[0m")
+        print("Resize your terminal or use a smaller maze.")
+        return
+
+    def get_path_char(idx: int) -> str:
+        if idx == 0 or idx == len(path_cells) - 1:
+            return "●"  # Start/end marker
+        x0, y0 = path_cells[idx - 1]
+        x1, y1 = path_cells[idx]
+        x2, y2 = path_cells[idx + 1]
+        dx1, dy1 = x1 - x0, y1 - y0
+        dx2, dy2 = x2 - x1, y2 - y1
+        if (dx1, dy1) == (dx2, dy2):
+            if dx1 == 0:
+                return "┃"
+            else:
+                return "━"
+        # Turn cases
+        if (dx1, dy1) == (0, -1) and (dx2, dy2) == (1, 0):
+            return "┏"
+        if (dx1, dy1) == (1, 0) and (dx2, dy2) == (0, 1):
+            return "┓"
+        if (dx1, dy1) == (0, 1) and (dx2, dy2) == (-1, 0):
+            return "┛"
+        if (dx1, dy1) == (-1, 0) and (dx2, dy2) == (0, -1):
+            return "┗"
+        if (dx1, dy1) == (0, -1) and (dx2, dy2) == (-1, 0):
+            return "┓"
+        if (dx1, dy1) == (-1, 0) and (dx2, dy2) == (0, 1):
+            return "┏"
+        if (dx1, dy1) == (0, 1) and (dx2, dy2) == (1, 0):
+            return "┗"
+        if (dx1, dy1) == (1, 0) and (dx2, dy2) == (0, -1):
+            return "┛"
+        return "*"  # fallback
 
     def h_wall(hx: int, hy: int) -> bool:
         """Check horizontal wall at column hx, separator row hy."""
@@ -108,10 +159,16 @@ def display_maze(
                     mid += ENTRY_COLOR + entry_mark + wall_color
                 elif (x, hy) == exit_pos:
                     mid += EXIT_COLOR + exit_mark + wall_color
+                elif (x, hy) in path_set:
+                    idx = path_cells.index((x, hy))
+                    # Support rainbow: path_color can be a list of colors
+                    if isinstance(path_color, list):
+                        color = path_color[idx % len(path_color)]
+                    else:
+                        color = path_color
+                    mid += color + get_path_char(idx) * 3 + wall_color
                 elif pattern_cells and (x, hy) in pattern_cells:
                     mid += pattern_color + "███" + wall_color
-                elif (x, hy) in path_cells:
-                    mid += path_color + "███" + wall_color
                 else:
                     mid += "   "
             mid += V_WALL if v_wall(width, hy) else " "

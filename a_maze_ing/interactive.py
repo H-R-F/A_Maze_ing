@@ -63,6 +63,7 @@ def run_interactive(
     # Solve for initial maze
     path = solve_maze(grid, width, height, entry, exit_pos)
 
+    import time
     while True:
         clear_screen()
 
@@ -72,6 +73,7 @@ def run_interactive(
                      if pattern_cells else PATTERN_COLOR)
         entry_mark, exit_mark = MARKER_PAIRS[pair_idx]
 
+        # Normal display
         display_maze(
             grid=grid,
             width=width,
@@ -125,7 +127,52 @@ def run_interactive(
 
             path = solve_maze(grid, width, height, entry, exit_pos)
 
+
         elif choice == "P":
+            if not show_path:
+                # Rainbow snake animation
+                if path:
+                    path_len = len(path)
+                    # Rainbow ANSI color codes
+                    rainbow = [
+                        "\033[91m",  # Red
+                        "\033[93m",  # Yellow
+                        "\033[92m",  # Green
+                        "\033[96m",  # Cyan
+                        "\033[94m",  # Blue
+                        "\033[95m",  # Magenta
+                    ]
+                    from functools import partial
+                    import a_maze_ing.visualizer as visualizer
+                    orig_display_maze = display_maze
+
+                    def rainbow_display_maze(*args, **kwargs):
+                        # Patch path_color to be a list of colors for each segment
+                        kwargs = dict(kwargs)
+                        path_str = kwargs.get("path")
+                        if path_str:
+                            # Build color list for each segment
+                            colors = [rainbow[i % len(rainbow)] for i in range(len(path_str) + 1)]
+                            kwargs["path_color"] = colors
+                        return orig_display_maze(*args, **kwargs)
+
+                    # Patch display_maze to use rainbow colors
+                    for i in range(1, path_len + 1):
+                        clear_screen()
+                        rainbow_display_maze(
+                            grid=grid,
+                            width=width,
+                            height=height,
+                            entry=entry,
+                            exit_pos=exit_pos,
+                            path=path[:i],
+                            wall_color=wall_color,
+                            pattern_cells=pattern_cells,
+                            pattern_color=pat_color,
+                            entry_mark=entry_mark,
+                            exit_mark=exit_mark,
+                        )
+                        time.sleep(0.04)
             show_path = not show_path
 
         elif choice == "W":
