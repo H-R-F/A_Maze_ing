@@ -116,19 +116,30 @@ This algorithm was chosen because it is:
 - Easy to adapt with custom blocked cells like the `42` pattern
 - Well suited for a reusable module
 
-## Reusable Parts
+### Usage Example
 
-The reusable part of the project is the `mazegen` package.
+Here is a basic example of how to use the `MazeGenerator` in your own project:
 
-It can be reused independently for:
+```python
+from mazegen.generator import MazeGenerator
 
-- Maze generation: `mazegen/generator.py`
-- Pattern injection: `mazegen/patterns.py`
-- Maze export/formatting: `mazegen/formatter.py`
-- Maze solving: `mazegen/solver.py`
+# 1. Instantiate the generator
+gen = MazeGenerator(width=21, height=11, perfect=True, seed=42)
 
-This means another project can import `mazegen` without depending on the full
-interactive application inside `a_maze_ing`.
+# 2. Generate the maze
+gen.generate()
+
+# 3. Access the grid (2D list of integers)
+grid = gen.get_grid()
+
+# 4. Use the solver to find a path
+from mazegen.solver import solve_maze
+path = solve_maze(grid, 21, 11, (0, 0), (20, 10))
+print(f"Path: {path}")
+```
+
+This entire reusable module (code and documentation) is available in a single
+`.whl` or `.tar.gz` file suitable for installation via `pip`.
 
 ## Team and Project Management
 
